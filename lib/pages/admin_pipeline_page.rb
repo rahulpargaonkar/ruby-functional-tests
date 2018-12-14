@@ -22,7 +22,11 @@ module Pages
     element :error_popup_ok_button, "[data-test-id='button-ok']"
     elements :error_messages, "[data-test-class='server-health-message_message']"
     elements :error_discription, "[data-test-class='server-health-message_detail']"
-  
+    element :save_clone_pipeline, "button.finish.submit"
+    element :error_message_on_clone_window, '.form_error'
+    element :set_pipeline, '.uniquePipelineName'
+    element :set_group, '.ac_input'
+
     def clone_pipeline(source_pipeline_name, new_pipeline_name, pipeline_group_name)
       click_on_clone_link_for(source_pipeline_name)
       page.find("#pipeline_group_pipeline_name").set new_pipeline_name
@@ -113,6 +117,22 @@ module Pages
     def pipeline_extraction_disabled?(pipeline)
       page.find(".action_icon.add_icon_disabled.extract_template_for_pipeline_#{pipeline}").visible?
     end
+
+    def verify_group_has_pipeline(group,pipeline)
+      page.find('.group.pipeline_group' ,text:group).has_css?('a.wrapped_word',text:pipeline) 
+    end  
+
+    def click_clone_button(pipeline)
+      page.find('a.wrapped_word', text:pipeline).ancestor('td.name').sibling('td.actions').find('ul li a.clone_pipeline').click
+    end
+
+    def is_unpos_button_exist?(pipeline)
+      page.has_css?("button#unpause-#{pipeline}")
+    end 
+
+    def get_pos_discription
+      page.find('.pause_description.paused_by').text
+    end 
 
     private
 

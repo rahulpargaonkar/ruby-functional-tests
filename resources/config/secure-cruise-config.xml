@@ -472,6 +472,24 @@
            </jobs>
           </stage>
          </pipeline>
+         <pipeline name="edit-pipeline">
+            <materials>
+                <git url="material-for-edit-pipeline" dest="git" materialName="git" autoUpdate="false"/>
+            </materials>
+            <stage name="defaultStage">
+                <approval type="manual"/>
+                <jobs>
+                    <job name="defaultJob">
+                        <tasks>
+                           <exec command="sleep">
+                                <arg>10</arg>
+                                <runif status="passed"/>
+                            </exec>
+                        </tasks>
+                    </job>
+                </jobs>
+            </stage>
+        </pipeline>
     </pipelines>
     <pipelines group="operable">
         <authorization>

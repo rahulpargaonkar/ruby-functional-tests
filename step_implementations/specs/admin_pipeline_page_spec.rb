@@ -82,3 +82,37 @@ step 'Verify that extract template is disabled for <pipeline>' do |pipeline|
   scenario_state.put 'current_pipeline', pipeline
   assert_true admin_pipeline_page.pipeline_extraction_disabled? scenario_state.self_pipeline
 end
+
+step 'Verify group <group> has pipelines <pipeline>' do |group,pipelines|
+  pipeline_names=[]
+  pipelines.split(',').each{ |pipeline|
+    pipeline_names=pipeline_names.push(scenario_state.get(pipeline)) || pipeline_names.push(pipeline) 
+  }
+  pipeline_names.each{ |pipeline|
+    assert_true admin_pipeline_page.verify_group_has_pipeline(group,pipeline)
+  }
+end
+step 'Click clone button for pipeline <pipeline>' do |pipeline|
+  pipeline_name=scenario_state.get(pipeline) || pipeline
+  admin_pipeline_page.click_clone_button(pipeline_name)
+end 
+
+step 'Save - Already On Clone Pipeline Popup' do ||
+  admin_pipeline_page.save_clone_pipeline.click
+end 
+step 'Verify error message <message> - Already On Clone Pipeline Popup' do |message|
+  assert_equal message, admin_pipeline_page.error_message_on_clone_window.text
+end
+step 'Enter pipeline name <pipeline>' do |pipeline|
+  admin_pipeline_page.set_pipeline.set(pipeline)
+end  
+step 'Enter pipeline group name <group>' do |group|
+  admin_pipeline_page.set_group.set(group)
+end 
+step 'Verify <message> message is displayed' do |message|
+  assert_true pipeline_settings_page.message_displayed?(message)
+end
+step 'Verify pipeline <pipeline> is paused with message <message>' do |pipeline, message|
+  assert_true admin_pipeline_page.is_unpos_button_exist?(pipeline)
+  assert_equal message, admin_pipeline_page.get_pos_discription
+end 
